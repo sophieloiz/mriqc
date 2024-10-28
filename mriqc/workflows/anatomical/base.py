@@ -97,7 +97,7 @@ def anat_qc_workflow(name='anatMRIQC'):
     # )
     dataset = list(
         chain(
-            config.workflow.inputs.get('t1w', []),
+            config.workflow.inputs.get('t1w', ['/export/home/cse180022/hdd/20221006/subjects/sub-8343217399383930914/ses-M00/flair_linear/sub-8343217399383930914_ses-00_flair_space-MNI152NLin2009cSym_desc-Crop_res-1x1x1_flair.nii.gz']),
             config.workflow.inputs.get('t2w', []),
         )
     )
@@ -465,9 +465,9 @@ def compute_iqms(name='ComputeIQMs'):
     addprov = pe.Node(AddProvenance(), name='provenance', run_without_submitting=True)
 
     # AFNI check smoothing
-    fwhm_interface = get_fwhmx()
+    #fwhm_interface = get_fwhmx()
 
-    fwhm = pe.Node(fwhm_interface, name='smoothness')
+    #fwhm = pe.Node(fwhm_interface, name='smoothness')
 
     # Harmonize
     homog = pe.Node(Harmonize(), name='harmonize')
@@ -517,10 +517,10 @@ def compute_iqms(name='ComputeIQMs'):
                                ('segmentation', 'in_segm'),
                                ('pvms', 'in_pvms'),
                                ('std_tpms', 'mni_tpms')]),
-        (inputnode, fwhm, [('in_ras', 'in_file'),
-                           ('brainmask', 'mask')]),
+       # (inputnode, fwhm, [('in_ras', 'in_file'),
+          #                 ('brainmask', 'mask')]),
         (homog, measures, [('out_file', 'in_noinu')]),
-        (fwhm, measures, [(('fwhm', _tofloat), 'in_fwhm')]),
+       # (fwhm, measures, [(('fwhm', _tofloat), 'in_fwhm')]),
         (measures, datasink, [('out_qc', 'root')]),
         (addprov, datasink, [('out_prov', 'provenance')]),
         (getqi2, datasink, [('qi2', 'qi_2')]),
